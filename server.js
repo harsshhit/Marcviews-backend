@@ -56,6 +56,10 @@ app.use("/api/appointments", appointmentRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/partners", partnerRoutes);
 app.use("/api/careers", careerRoutes);
+// Root route for testing
+app.get("/", (req, res) => {
+  res.send("Hello from the backend!");
+});
 
 // Catch all other routes in production
 if (process.env.NODE_ENV === "production") {

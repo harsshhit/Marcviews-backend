@@ -31,14 +31,38 @@ exports.protect = async (req, res, next) => {
       });
     }
 
+    // 5) Check if user changed password after token was issued
+    if (user.changedPasswordAfter(decoded.iat)) {
+      return res.status(401).json({
+        message: "User recently changed password. Please log in again.",
+      });
+    }
+
     // Grant access to protected route
     req.user = user;
     // Add id property for consistency
     req.user.id = req.user._id;
     next();
   } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        message: "Your session has expired. Please log in again.",
+      });
+    }
     return res
       .status(401)
       .json({ message: "Invalid token. Please log in again." });
   }
+};
+
+// Restrict access based on user role
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        message: "You do not have permission to perform this action.",
+      });
+    }
+    next();
+  };
 };
