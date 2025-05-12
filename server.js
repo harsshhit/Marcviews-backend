@@ -12,10 +12,12 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin:
+  origin: [
     process.env.NODE_ENV === "production"
       ? process.env.FRONTEND_URL
       : "http://localhost:5173", // Vite's default port
+    "https://marcviews.vercel.app"
+  ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
