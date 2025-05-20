@@ -4,7 +4,7 @@ const contactSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: false, // Optional to allow non-authenticated users to submit
   },
   name: {
     type: String,
@@ -16,6 +16,10 @@ const contactSchema = new mongoose.Schema({
     required: [true, "Email is required"],
     trim: true,
   },
+  phone: {
+    type: String,
+    trim: true,
+  },
   industry: {
     type: String,
     trim: true,
@@ -23,6 +27,11 @@ const contactSchema = new mongoose.Schema({
   companyName: {
     type: String,
     required: [true, "Company name is required"],
+    trim: true,
+  },
+  companySize: {
+    type: String,
+    enum: ["1-10", "11-50", "51-200", "201-500", "501-1000", "1000+"],
     trim: true,
   },
   companyWebsite: {
@@ -33,9 +42,30 @@ const contactSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  country: {
+    type: String,
+    trim: true,
+  },
   inquiry: {
     type: String,
     required: [true, "Inquiry is required"],
+  },
+  inquiryType: {
+    type: String,
+    enum: ["general", "sales", "support", "partnership", "other"],
+    default: "general",
+  },
+  budget: {
+    type: String,
+    enum: ["<$5,000", "$5,000-$10,000", "$10,000-$25,000", "$25,000-$50,000", "$50,000+"],
+  },
+  timeframe: {
+    type: String,
+    enum: ["immediate", "1-3 months", "3-6 months", "6-12 months", "12+ months"],
+  },
+  howDidYouHear: {
+    type: String,
+    trim: true,
   },
   signUpForUpdates: {
     type: Boolean,
