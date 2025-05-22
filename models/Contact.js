@@ -26,7 +26,7 @@ const contactSchema = new mongoose.Schema({
   },
   companyName: {
     type: String,
-    required: [true, "Company name is required"],
+    required: false, // Made optional to allow submissions without company name
     trim: true,
   },
   companySize: {

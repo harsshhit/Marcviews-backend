@@ -39,6 +39,28 @@ router.post("/", optionalAuth, async (req, res) => {
     if (!contactData.inquiryType) contactData.inquiryType = "general";
     if (!contactData.status) contactData.status = "new";
 
+    // Validate required fields
+    if (!contactData.name) {
+      return res.status(400).json({
+        status: "error",
+        message: "Name is required"
+      });
+    }
+
+    if (!contactData.email) {
+      return res.status(400).json({
+        status: "error",
+        message: "Email is required"
+      });
+    }
+
+    if (!contactData.inquiry) {
+      return res.status(400).json({
+        status: "error",
+        message: "Inquiry message is required"
+      });
+    }
+
     console.log("Creating contact submission:", contactData);
 
     // Create the contact
@@ -53,9 +75,22 @@ router.post("/", optionalAuth, async (req, res) => {
     });
   } catch (error) {
     console.error("Contact submission error:", error);
+
+    // Provide more detailed error messages
+    let errorMessage = "Failed to submit contact form. Please try again.";
+
+    if (error.name === 'ValidationError') {
+      // Extract validation error messages
+      errorMessage = Object.values(error.errors)
+        .map(err => err.message)
+        .join(', ');
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+
     res.status(400).json({
       status: "error",
-      message: error.message || "Failed to submit contact form. Please try again."
+      message: errorMessage
     });
   }
 });
