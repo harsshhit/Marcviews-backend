@@ -63,12 +63,13 @@ app.get("/", (req, res) => {
   res.send("Hello from the backend!");
 });
 
-// Catch all other routes in production
-if (process.env.NODE_ENV === "production") {
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../build", "index.html"));
-  });
-}
+// API health check route
+app.get("/api", (req, res) => {
+  res.status(200).json({ status: "success", message: "API is running" });
+});
+
+// In production, let Vercel handle routing for frontend routes
+// The backend should only handle API routes
 
 // Error handling middleware
 app.use((err, req, res, next) => {
